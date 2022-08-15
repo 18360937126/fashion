@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.hysf.mapper.GoodsMapper">
+
+<select id="findAllGoods" resultType="cn.hysf.model.Goods">
+    select * from goods where status = 0
+</select>
+
+<select id="findGoodByGid" resultType="cn.hysf.model.Goods">
+    select * from goods where gid = #{gid}
+</select>
+
+    <select id="findGoodsByKind" resultType="cn.hysf.model.Goods">
+        select * from goods where gkind = #{gkind}
+    </select>
+
+    <select id="findManTypeGoods" resultType="cn.hysf.model.Goods">
+        select * from goods where mankind = 0 or mankind = 2 and status = 0
+    </select>
+
+    <select id="findWomanTypeGoods" resultType="cn.hysf.model.Goods">
+        select * from goods where mankind = 1 or mankind = 2 and status = 0
+    </select>
+
+    <select id="findOtherTypeGoods" resultType="cn.hysf.model.Goods">
+        select * from goods where mankind = 2 and status = 0
+    </select>
+
+    <select id="findUnder100Goods" resultType="cn.hysf.model.Goods">
+        select * from goods where gprice &lt;= 100 and status = 0
+    </select>
+
+    <select id="findGoodByGid2" resultType="cn.hysf.model.Goods">
+        select * from goods where gid = #{gid}
+    </select>
+
+    <select id="selectPage" resultType="cn.hysf.model.Goods">
+        select * from goods
+    </select>
+
+   <update id="changeGoodStatusTo1">
+       update goods set status = 1 where gid = #{gid}
+   </update>
+
+    <update id="changeGoodStatusTo0">
+        update goods set status = 0 where gid = #{gid}
+    </update>
+
+    <insert id="addGoods">
+        insert into goods(gname1,gname2,ginfo,gprice,gsize1,gsize2,gkind,orderNumbers,likeNumbers,status,mankind,
+                          gimg1,gimg2,gimg3,gimg4,gimg5,gimg6,gimg7,gimg8)
+                          values(#{gname1},#{gname2},#{ginfo},#{gprice},
+                                 #{gsize1},#{gsize2},#{gkind},
+                                 #{orderNumbers},#{likeNumbers},#{status},#{mankind},
+                                 #{gimg1},#{gimg2},#{gimg3},#{gimg4},#{gimg5},#{gimg6},#{gimg7},#{gimg8})
+    </insert>
+</mapper>

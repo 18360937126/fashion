@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>时尚商城后台管理</title>
+  <script src="js/jquery-3.4.1.min.js" type="text/javascript" charset="utf-8"></script>
+  <link rel="stylesheet" type="text/css" href="Bootstrap/bootstrap-3.3.7-dist/css/bootstrap.min.css" />
+<link href="css/style-responsive.css" type="text/css" rel="stylesheet">
+<link href="css/default-theme.css" type="text/css" rel="stylesheet">
+<link href="css/style.css" type="text/css" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="css/sweetalert.css">
+  <script type="text/javascript" src="js/sweetalert-dev.js"></script>
+  <script src="js/Pagination.js"></script>
+  <link href="css/product-orders.css" type="text/css" rel="stylesheet">
+<link href="css/bootstrap-reset.css" type="text/css" rel="stylesheet">
+<link href="css/font-awesome.css" type="text/css" rel="stylesheet">
+</head>
+<body class="sticky-header">
+<section>
+  <div class="sidebar-left">
+    <div class="sidebar-left-info">
+      <div class=" search-field"> </div>
+      <ul class="nav nav-pills nav-stacked side-navigation">
+        <li class="menu-list"> <a href=""><i class="fa fa-drivers-license"></i> <span>用户管理</span></a>
+          <ul class="child-list">
+            <li><a href="/declarePage/index">用户管理</a></li>
+          </ul>
+        </li>
+        <li class="menu-list nav-active"> <a href=""><i class="fa fa-file-text"></i> <span>订单管理</span></a>
+          <ul class="child-list">
+            <li  class="active"><a href="/declarePage/ordersPage">订单列表</a></li>
+          </ul>
+        </li>
+        <li class="menu-list"><a href=""><i class="fa fa-shopping-cart"></i> <span>商品管理</span></a>
+          <ul class="child-list">
+            <li><a href="/declarePage/goodsPage">商品列表</a></li>
+          </ul>
+        </li>
+        <li class="menu-list"><a href=""><i class="fa fa-desktop"></i> <span>评论管理</span></a>
+          <ul class="child-list">
+            <li><a href="/declarePage/commentsPage"> 评论列表</a></li>
+          </ul>
+        </li>
+        <li class="menu-list"><a href="javascript:;"><i class="fa fa-pie-chart"></i> <span>数据管理</span></a>
+          <ul class="child-list">
+            <li><a href="数据统计.html">收藏统计</a></li>
+            <li><a href="数据统计.html">加购统计</a></li>
+            <li><a href="数据统计.html">下单统计</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="body-content" >
+    <div class="header-section">
+      <div class="logo dark-logo-bg"> <a href="index.html"> <img src="img/logo-icon.png" alt=""> 
+        <!--<i class="fa fa-maxcdn"></i>--> 
+        <span class="brand-name" style="font-size: 15px; font-weight: bold;">时尚商城后台管理</span> </a> </div>
+      <div class="icon-logo dark-logo-bg hidden-xs hidden-sm"> <a href="index.html"><img src="img/logo-icon.png" alt=""> </a> </div>
+      <a class="toggle-btn"><i class="fa fa-outdent"></i></a>
+      <div class="notification-wrap">
+        <div class="right-notification">
+          <ul class="notification-menu">
+            <li  class="dropdown">
+				<a href="javascript:;" data-toggle="dropdown" class="dropdown-toggle" aria-expanded="false"> <i class="fa  fa-cogs"></i> 账号设置  <b class=" fa fa-angle-down"></b></a>
+				
+			  <ul role="menu" class="dropdown-menu language-switch">
+                                <li>
+                                    <a  href="/declarePage/changePasswordPage">修改密码</a>
+                                </li>
+                            </ul>
+			  
+			  </li>
+			  
+		
+			  
+            <li> <a href="javascript:;" class="btn btn-default  dropdown-toggle"> <i class="fa fa-sign-out"></i>退出登录 </a> </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="page-head">
+      <ol class="breadcrumb">
+        <li><a href="#">订单管理</a></li>
+        <li  class="active">订单信息</li>
+      </ol>
+      <h3>订单管理</h3>
+    </div>
+    <div class="wrapper">
+      <div class="panel">
+        <div class="panel-body">
+          <div class="form1 searchbox">
+            <ul class="row">
+              <li class="col-xs-3"> <span>卡号：</span>
+                <input type="text" class="form-control">
+              </li>
+              <li class="col-xs-3"> <span>状态：</span>
+                <select  class="form-control">
+                  <option>未绑定</option>
+                  <option>使用中</option>
+                  <option>补卡</option>
+                </select>
+              </li>
+              <li class="col-xs-4" style="padding-left: 0"> <a href="#" class="btn btn-primary">查询</a> </li>
+            </ul>
+          </div>
+          <div class="line"></div>
+          <div class="clearfix">
+
+            <div class="pull-right"></div>
+          </div>
+
+          <table class="table m-t-20">
+            <thead>
+              <tr>
+                <th>订单编号</th>
+                <th>商品图片</th>
+                <th>商品编号</th>
+                <th>价格</th>
+                <th>下单用户</th>
+                <th>下单手机号</th>
+                <th>地址</th>
+                <th>下单时间</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody>
+            <div th:each="order : ${orders}">
+              <tr>
+                <td th:text="${order.oid}"></td>
+                <td>
+                  <div class="row">
+                    <div class="col-md-3 img-wapper">
+                      <img th:src="${order.gimg1}">
+                    </div>
+                  </div>
+                </td>
+                <td th:text="${order.gid}"></td>
+                <td th:text="${order.gprice}"></td>
+                <td th:text="${order.username}"></td>
+                <td th:text="${order.phone}"></td>
+                <td th:text="${order.address}"></td>
+                <td th:text="${order.date}"></td>
+                <td>
+                <button class="btn btn-primary" href="#" type="button">取消</button>
+                <button  th:onclick="|DeleteOrdersinfoById(${order.id})|" class="btn btn-primary">删除</button>
+                </td>
+              </tr>
+            </div>
+            </tbody>
+          </table>
+
+          <div class="page clearfix">
+            <!--翻页-->
+            <div class="modal-footer no-margin-top">
+              <ul class="pagination pull-right no-margin" th:if="${page.totalPages &gt; 0}">
+                <!-- 首页 -->
+                <li>
+                  <a th:href="@{'/declarePage/ordersPage?pageNum=0='}">首页</a>
+                </li>
+                <!-- 首页 -->
+                <!-- 中间页 -->
+                <li th:each="pageNum:${#numbers.sequence(1, page.totalPages)}">
+                  <a th:href="@{'/declarePage/ordersPage?pageNum=' + ${pageNum}}"  th:text="${pageNum}" th:if="${pageNum ne page.pageNum}"></a>
+                  <a th:href="@{'/declarePage/ordersPage?pageNum=' + ${pageNum}}"  th:text="${pageNum}" th:if="${pageNum eq page.pageNum}" th:style="'font-weight:bold;background: #6faed9;'"></a>
+                </li>
+                <!-- 中间页 -->
+                <!-- 尾页 -->
+                <li>
+                  <a th:href="@{'/declarePage/ordersPage?pageNum=' + ${page.totalPages }}">末页</a>
+                </li>
+                <!-- 尾页 -->
+              </ul>
+            </div>
+            <!--翻页-->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+	
+<script src="js/bootstrap.js" type="text/javascript" charset="utf-8"></script>
+<script src="js/echarts.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="js/scripts.js" type="text/javascript" charset="utf-8"></script>
+<script src="laydate/laydate.js" type="text/javascript" charset="utf-8"></script>
+<script>
+lay('#version').html('-v'+ laydate.v);
+laydate.render({
+    elem: '#test1'
+  ,range: true
+  ,theme: '#1890ff'
+});
+</script>
+<script>
+  $(function () {
+    $.get("/admin/findAdmin",{},function (adminuser) {
+      if(adminuser){
+      }else{
+        location.href="/declarePage/loginPage";
+      }
+    });
+  });
+
+  function DeleteOrdersinfoById(id){
+    swal({
+              title: "确定删除吗?",
+              text: "",
+              type: "warning",
+              showCancelButton: true,
+              confirmButtonColor: "#DD6B55",
+              confirmButtonText: "确定",
+              cancelButtonText: "取消",
+              closeOnConfirm: false,
+              closeOnCancel: false
+            },
+            function(isConfirm){
+              if (isConfirm) {
+                $.get("/orders/deleteOrdersInfoById",{id:id},function () {
+                  swal("Success!", "删除成功",
+                          "success");
+                  location.reload();
+                });
+              } else {
+                swal("Cancel!", "取消.",
+                        "error");
+              }
+            });
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.hysf.mapper.OrdersinfoMapper">
+<insert id="makeAnOrderInfo">
+    insert into ordersinfo(oid,uid,gid,username,email,phone,postal,address,city,date)
+    values(#{oid},#{uid},#{gid},#{username},#{email},#{phone},#{postal},#{address},#{city},#{date})
+</insert>
+    <select id="findOrdersInfoByOid" resultType="cn.hysf.model.Ordersinfo">
+        select * from ordersinfo where oid = #{oid}
+    </select>
+    <delete id="deleteByOid">
+        delete from ordersinfo where oid = #{oid}
+    </delete>
+
+    <delete id="deleteOrdersInfoById">
+        delete from ordersinfo where id = #{id}
+    </delete>
+
+    <select id="findOrdersInfoById" resultType="cn.hysf.model.Ordersinfo">
+        select * from ordersinfo where id =#{id}
+    </select>
+
+    <select id="selectPage" resultType="cn.hysf.model.Ordersinfo">
+        select * from ordersinfo
+    </select>
+
+    <select id="findAllGids" resultType="java.lang.Integer">
+        select gid from ordersinfo
+    </select>
+
+    <select id="findGidsByUid" resultType="java.lang.Integer">
+        select gid from ordersinfo where uid = #{uid}
+    </select>
+</mapper>

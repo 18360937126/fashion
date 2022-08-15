@@ -1,0 +1,117 @@
+.goods-info{
+   /*border: solid;*/
+
+}
+.goods-font{
+    margin-left: 10%;
+    margin-top: 15%;
+}
+.goods-name{
+    margin-left: 10%;
+    margin-top: 25%;
+}
+.goods-name-info{
+    margin-left: 10%;
+    font-size: 30px;
+    padding-top: 10px;
+}
+.goods-price{
+    margin-left: 10%;
+    font-size: 20px;
+    color: gainsboro;
+    padding-top: 5px;
+}
+.goods-size{
+    width: 300px;
+}
+.goods-size-btn{
+    width: 400px;
+    height: 60px;
+}
+.goods-size-li{
+    width: 400px;
+    text-align: center;
+}
+
+.addFavourite{
+    padding-top: 10px;
+    /*border: solid;*/
+    width: 400px;
+}
+
+.addFavourite-btn{
+    width:300px ;
+    color: white;
+    background-color: black;
+}
+.addFavourite-btn2{
+    color: white;
+    background-color: black;
+}
+.addFavourite2{
+    margin-left: 40px;
+    width: 50px;
+    display: inline-block;
+}
+.p-size-guide{
+
+    margin-top: 5px;
+}
+#goods-idea{
+    font-weight: bolder;
+}
+
+#goods-infomation{
+    width: 400px;
+}
+
+
+/*图片部分*/
+
+.goods-pictures{
+    margin-top: 60px;
+}
+
+.goods-picture1{
+    margin-top: 60px;
+}
+
+.goods-picture1 img{
+   margin-left: 170px;
+    width: 100%;
+}
+
+.goods-picture2{
+    margin-top: 60px;
+}
+.goods-picture2 img{
+    margin-right: 170px;
+    width: 100%;
+}
+
+
+
+@media screen and (max-width:554px){
+    .goods-picture11 img{
+        width: 554px;
+        height: 800px;
+    }
+    #gpic1 img{
+        width: 100px;
+        height: 100px;
+    }
+}
+
+#gpic1 img{
+    height:554px;
+    width: 800px;
+}
+
+
+
+
+
+
+
+.like{ font-size:20px;  color:#ccc; cursor:pointer;}
+.cs{color:#f00;}

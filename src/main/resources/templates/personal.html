@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>My Cart</title>
+    <link rel="stylesheet" type="text/css" href="css/product-orders.css" />
+    <script src="js/jquery-3.4.1.min.js" type="text/javascript" charset="utf-8"></script>
+
+    <link rel="stylesheet" type="text/css" href="css/sweetalert.css">
+    <script type="text/javascript" src="js/sweetalert-dev.js"></script>
+
+    <script>
+        $(function () {
+            $("#headerPage").load("header.html");
+            $("#footerPage").load("footer.html");
+            $.get("/findUserName",{},function (user) {
+                if(user){
+                    //判断依据登录，再来编辑购物车页面
+                    $.get("/cart/findMyCartsByUid",{},function (data) {
+                        var li='';
+                        var lis='';
+                        for (var i = 0; i < data.length; i++) {
+                            var good = data[i];
+                            li='';
+                            lis+=li;
+                        }
+
+                    });
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+<!--头部开始-->
+<div id="headerPage"></div>
+<!--头部结束-->
+
+<!--购物车开始-->
+<div class="container-fluid">
+    <div class="row">
+
+        <div class="col-md-5">
+            <h3 style="margin-left: 30px">Your Personal Infomation.</h3>
+            <br>
+            <a href="/ordersPage/mainPage" style="margin-left: 30px">
+                <span class="arrow-back-link__arrow">←</span>
+                <span style="font-size: 13px;color: #000000">Back to Orders</span>
+            </a>
+            <br>
+        </div>
+
+
+        <div class="col-md-7">
+
+            <form id="touxiangform" method="post" enctype="multipart/form-data" action="/uploadTouxiangFuWuQi" style="margin-left: 20px">
+                <div class="form-row">
+                    <div class="form-group col-md-10">
+                        <label for="avatar">Avatar</label>
+                        <div class="photo">
+                            <div class="avatar" id="avatar" th:style="'background-image:url('+${user.touxiang}+')'" >
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-md-10">
+                        <input id="file" name="file" type="file"/>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-md-10">
+                        <input type="submit" class="btn btn-primary"/>
+                    </div>
+                </div>
+
+            </form>
+
+
+
+
+            <form id="personalInfo" style="margin-left: 20px">
+
+
+                <div class="form-row">
+                    <div class="form-group col-md-10">
+                        <label for="username">UserName</label>
+                        <input type="text" id="username" th:value="${user.username}" class="form-control" placeholder="UserName">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-md-10">
+                        <label for="email">Email</label>
+                        <input type="text" id="email" th:value="${user.email}" class="form-control" placeholder="Email">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-md-10">
+                        <label for="birthday">Birthday</label>
+                        <input type="text" id="birthday" th:value="${user.birthday}" class="form-control" placeholder="Birthday">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-md-10">
+                        <label for="address">Address</label>
+                        <input type="text" id="address" th:value="${user.address}" class="form-control" placeholder="Address">
+                    </div>
+                </div>
+
+
+                <div class="form-row">
+                    <div class="form-group col-md-10">
+                        <button type="button" class="btn btn-primary">Change</button>
+                    </div>
+                </div>
+
+            </form>
+
+
+
+        </div>
+
+
+    </div>
+
+    <div class="row btn-end">
+    <!--返回商城按钮开始-->
+    <div class="col-md-2" >
+        <a href="/" type="button" id="continue-btn" class="btn btn-default btn-lg">
+            Continue Shopping
+        </a>
+    </div>
+    <!--返回商城按钮结束-->
+        <div class="col-md-7"></div>
+
+
+    </div>
+</div>
+<!--购物车结束-->
+<br><br>
+<!--更多商品信息开始-->
+<div class="container-fluid" style="margin-left: 35px">
+    <div class="row">
+        <span style="font-size: 24px;color: #000000;font-weight: inherit">&nbsp;What about this?</span>
+    </div>
+
+
+</div>
+<!--更多商品信息结束-->
+
+<!--尾部开始-->
+<div id="footerPage"></div>
+<!--尾部结束-->
+</body>
+</html>

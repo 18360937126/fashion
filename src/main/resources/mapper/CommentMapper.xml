@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.hysf.mapper.CommentMapper">
+<select id="findIfOrdersInfoIdExist" resultType="cn.hysf.model.Comment">
+    select * from comment where ordersinfoId = #{ordersinfoId}
+</select>
+    <insert id="addComment">
+        insert into comment(oid,comment,recordtime,uid,ordersinfoId,level,gid)
+        values(#{oid},#{comment},#{recordtime},#{uid},#{ordersinfoId},#{level},#{gid})
+    </insert>
+
+    <select id="selectPage" resultType="cn.hysf.model.Comment">
+        select * from comment
+    </select>
+
+    <select id="selectPageByGid" resultType="cn.hysf.model.Comment">
+        select * from comment where gid = #{gid}
+    </select>
+
+    <select id="findCommentByCid" resultType="cn.hysf.model.Comment">
+        select * from comment where  cid = #{cid}
+    </select>
+
+    <insert id="saveReplyComment">
+        insert into comment(comment,recordtime,uid,level,gid)
+        values(#{comment},#{recordtime},#{uid},#{level},#{gid})
+    </insert>
+
+    <delete id="deleteCommentByCid">
+        delete from comment where cid = #{cid}
+    </delete>
+</mapper>

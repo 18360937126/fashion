@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>My Cart</title>
+    <link rel="stylesheet" type="text/css" href="css/product-orders.css" />
+    <script src="js/jquery-3.4.1.min.js" type="text/javascript" charset="utf-8"></script>
+
+    <link rel="stylesheet" type="text/css" href="css/sweetalert.css">
+    <script type="text/javascript" src="js/sweetalert-dev.js"></script>
+
+    <script>
+        $(function () {
+            $("#headerPage").load("header.html");
+            $("#footerPage").load("footer.html");
+            $.get("/findUserName",{},function (user) {
+                if(user){
+                    //判断依据登录，再来编辑购物车页面
+                    $.get("/cart/findMyCartsByUid",{},function (data) {
+                        var li='';
+                        var lis='';
+                        var allprice = 0.00;
+                        for (var i = 0; i < data.length; i++) {
+                            var good = data[i];
+                            var price = good.gprice;
+                            allprice = numSub(allprice,price)
+                            li='<div class="row">\n' +
+                                '                    <hr>\n' +
+                                '                    <div class="col-xs-6 col-md-3">\n' +
+                                '                        <a href="/goodsPage/detail?gid='+good.gid+'" class="cart-img">\n' +
+                                '                            <img src="'+good.gimg1+'">\n' +
+                                '                        </a>\n' +
+                                '                    </div>\n' +
+                                '                    <div class="col-md-6 goods-info" >\n' +
+                                '                    <!--文字信息开始-->\n' +
+                                '                    <a href="/goodsPage/detail?gid='+good.gid+'" style="padding-top: 0px">\n' +
+                                '                       <!-- <p class="gname1">PATAGONIA</p>-->\n' +
+                                '                        <p class="gname2">'+good.gname2+'</p>\n' +
+                                '                        <p class="gsize">SIZE:'+good.gsize1+'</p>\n' +
+                                '                    </a>\n' +
+                                '                    <!--文字信息结束-->\n' +
+                                '                        <a href="/cart/deleteGoodInMyCart?cid='+good.cid+'" class="remove">Remove</a>\n' +
+                                '                    </div>\n' +
+                                '\n' +
+                                '                    <div class="col-md-3">\n' +
+                                '                            Quantity:<span class="goods-quantity">1</span>\n' +
+                                '                        <div class="goods-price">$'+good.gprice+'</div>\n' +
+                                '                    </div>\n' +
+                                '                </div>';
+                            lis+=li;
+                        }
+                        $("#fuhao").html('$');
+                        $("#goodsInfo").html(lis);
+                        $("#total-Price").html(allprice);
+                    });
+                }
+            });
+        });
+
+        function removeCartsGood(cid){
+            //删除购物车中的商品
+            $("/cart/deleteGoodInMyCart",{cid:cid},function () {
+                location.reload();
+            })
+        }
+
+
+        function numSub(num1, num2) {
+            var baseNum, baseNum1, baseNum2;
+            try {
+                baseNum1 = num1.toString().split(".")[1].length;
+            } catch (e) {
+                baseNum1 = 0;
+            }
+            try {
+                baseNum2 = num2.toString().split(".")[1].length;
+            } catch (e) {
+                baseNum2 = 0;
+            }
+            baseNum = Math.pow(10, Math.max(baseNum1, baseNum2));
+            return (num1 * baseNum + num2 * baseNum) / baseNum;
+        };
+    </script>
+</head>
+<body>
+<!--头部开始-->
+<div id="headerPage"></div>
+<!--头部结束-->
+
+<!--购物车开始-->
+<div class="container-fluid">
+    <div class="row">
+
+        <div class="col-md-5">
+            <h3 style="margin-left: 30px">Your Cart</h3>
+        </div>
+
+        <!--购物车列表-->
+        <div class="col-md-7">
+            <h4 style="margin-top: 30px">Grab a sweet sale deal now  🤯  !</h4>
+
+            <div id="goodsInfo">
+            <!--商品信息开始-->
+
+                <!--<div class="row">
+                    <hr>
+                    <div class="col-xs-6 col-md-3">
+                        <a href="#" class="cart-img">
+                            <img src="">
+                        </a>
+                    </div>
+                    <div class="col-md-6 goods-info" >
+                    &lt;!&ndash;文字信息开始&ndash;&gt;
+                    <a href="#" style="padding-top: 0px">
+                       &lt;!&ndash; <p class="gname1">PATAGONIA</p>&ndash;&gt;
+                        <p class="gname2">Bivy Down Jacket - new navy</p>
+                        <p class="gsize">SIZE:ONE SIZE</p>
+                    </a>
+                    &lt;!&ndash;文字信息结束&ndash;&gt;
+                        <a href="#" class="remove">Remove</a>
+                    </div>
+
+                    <div class="col-md-3">
+                            Quantity:<span class="goods-quantity">1</span>
+                        <div class="goods-price">$370.00</div>
+                    </div>
+                </div>-->
+
+
+
+
+            </div>
+
+            <br><br>
+            <!--总价开始-->
+            <div class="row" id="allPrice">
+                <div class="col-md-9 total1">
+                    Total
+                </div>
+                <div class="col-md-3 total2">
+                    <span style="font-size: 28px;color: #888888;" id="fuhao"></span>
+                    <span style="font-size: 28px;color: #888888;" id="total-Price"></span>
+                </div>
+            </div>
+            <!--总价结束-->
+
+        </div>
+    </div>
+
+    <div class="row btn-end">
+    <!--返回商城按钮开始-->
+    <div class="col-md-2" >
+        <a href="/" type="button" id="continue-btn" class="btn btn-default btn-lg">
+            Continue Shopping
+        </a>
+    </div>
+    <!--返回商城按钮结束-->
+        <div class="col-md-7"></div>
+    <!--提交订单按钮开始-->
+        <div class="col-md-3 ">
+            <a href="/ordersPage/placeorderPage" class="btn btn-primary checkOut-btn" id="checkout-btn">
+                CheckOut
+            </a>
+        </div>
+    <!--提交订单按钮结束-->
+
+    </div>
+</div>
+<!--购物车结束-->
+<br><br>
+<!--更多商品信息开始-->
+<div class="container-fluid" style="margin-left: 35px">
+    <div class="row">
+        <span style="font-size: 24px;color: #000000;font-weight: inherit">&nbsp;What about this?</span>
+    </div>
+
+
+</div>
+<!--更多商品信息结束-->
+
+<!--尾部开始-->
+<div id="footerPage"></div>
+<!--尾部结束-->
+</body>
+</html>

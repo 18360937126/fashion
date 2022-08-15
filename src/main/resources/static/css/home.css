@@ -1,0 +1,189 @@
+body {
+	padding: 0;
+	margin: 0;
+	background-color: #FFF5F4;
+	height: 1000px;
+	position: relative;
+}
+a{
+	text-decoration: none;
+}
+/* 顶部文字滚动 */
+.top-gun{
+	background-color: #91adfa;
+	height: 50px;
+	text-align: center;
+	line-height: 50px;
+	color: whitesmoke;
+	font-size: 30px;
+}
+/*下拉框*/
+/* .cd{
+	position: fixed;
+} */
+.cdk{
+	position: relative;
+}
+.cdk01{
+	font-size: 25px;
+	font-weight: bold;
+}
+.cdk01{
+	color: black;
+	position: absolute;
+	top: 7px;
+	/* left: -15px; */
+}
+.cdk02,.cdk03,.cdk05{
+	color: gray;
+}
+#menu ul li{
+	list-style: none;
+}
+#menu ul{
+	display: none;
+	
+	
+}
+#menu>li:hover ul{
+	display: block;
+}
+.cdk04{
+	/* border-color: gray; */
+	/* border-top: none;
+	border-right: none; */
+}
+.cdk04-li{
+	
+	position: absolute;
+	left: 370px;
+	top: 15px;
+}
+.cdk05-li{
+	position: absolute;
+	left: 400px;
+}
+/* 黄色部分 */
+.row-yellow{
+	position: relative;
+}
+.mid-yellow01{
+	height: 610px;
+	width: 1400px;
+	background-color: #f9d449;
+	/* margin: 50px 45px -50px 45px; */
+	/* padding: 80px 0px -80px 0px; */
+}
+.mid-yellow02{
+	width: 470px;
+	height: 400px;
+	/* border: solid;
+	border-color: black; */
+	position: relative;
+	left: 20px;
+	top: 90px;
+}
+.mid-yellow02-1{
+	width: 300px;
+	height: 50px;
+	position: absolute;
+	left: 30px;
+	top: 15px;
+}
+.mid-yellow02-2{
+	width: 300px;
+	height: 70px;
+	position: absolute;
+	top: 50px;
+	left: 30px;
+	font-size: 40px;
+}
+.mid-yellow02-3{
+	width: 400px;
+	height: 70px;
+	position: absolute;
+	top: 150px;
+	left: 30px;
+}
+.mid-yellow03{
+	width: 400px;
+	height: 400px;
+	position: absolute;
+	right: 250px;
+	top: 60px;
+}
+.mid-yellow03 img{
+	position: absolute;
+	width: 650px;
+	height: 550px;
+}
+@media screen and (max-width: 768px) {
+	.mid-yellow02{
+		top: 20px;
+		left: 0px;
+	}
+	.mid-yellow03 img{
+		width: 300px;
+		height: 300px;
+	}
+	.mid-yellow03{
+		
+		right: -60px;
+		top: 300px;
+	}
+}
+/*菜单 */
+.searchForm{
+	/*float: right;
+	margin-right: 200px;*/
+
+}
+
+.brand,.brand2{
+
+
+}
+
+/*商品列表*/
+.list0{
+margin-top: 10px;
+}
+.list1{
+}
+.list2{
+margin-top: 20px;
+}
+.list3{
+
+}
+
+.image-block{
+
+	width: 20%;
+	height: 20%;
+
+}
+
+.text-block{
+	margin-top: 5px;
+	line-height: 16px;
+}
+
+.text-block p{
+	margin:0 auto;
+}
+
+
+.textToggle{
+	opacity: 1;
+	-webkit-transition: opacity ease .5s;
+	transition: opacity ease .5s;
+	position: relative;
+	min-width: 300px;
+	font-size: 12px;
+	line-height: 16px;
+}
+
+.is-hidden{
+	display: block;
+}

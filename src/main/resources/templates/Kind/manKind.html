@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="utf-8">
+		<title>As Good As Gold</title>
+		<!-- 强制浏览器以最新的版本渲染页面 -->
+		<meta http-equiv="X-UA-Compatible" content="IE=edg" />
+		<meta name="viewport"
+			content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<!--<link rel="stylesheet" type="text/css" href="css/home.css" />-->
+		<script src="js/jquery-3.4.1.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/home.js" type="text/javascript" charset="utf-8"></script>
+		<style type="text/css">
+			.col-xs-1-5,
+			.col-sm-1-5,
+			.col-md-1-5,
+			.col-lg-1-5 {
+				position: relative;
+				min-height: 1px;
+				margin-right: 10px;
+				margin-left: 10px;
+
+			}
+
+			.col-xs-1-5 {
+				width: 18%;
+				float: left;
+			}
+
+			@media (min-width: 768px) {
+				.col-sm-1-5 {
+					width: 18%;
+					float: left;
+				}
+			}
+
+			@media (min-width: 992px) {
+				.col-md-1-5 {
+					width: 18%;
+					float: left;
+				}
+			}
+
+			@media (min-width: 1200px) {
+				.col-lg-1-5 {
+					width: 18%;
+					float: left;
+				}
+			}
+		</style>
+		<script>
+			$(function () {
+				$("#header").load("header.html");
+				$("#footer").load("footer.html");
+
+				//鼠标悬停自动更换图片
+
+
+				$.get("/goods/findManTypeGoods",{},function (data) {
+					var li = '';
+					var lis = '<div class="row list2">';
+					for (var i = 0; i < data.length; i++) {
+						var good = data[i];
+						var gimg1 = good.gimg1;
+						var gimg2 = good.gimg2;
+						li='<div class="col-md-1-5 list1 ">\n' +
+								'\t\t\t\t\t<div>\n' +
+								'\t\t\t\t\t\t<a href="/goodsPage/detail?gid='+good.gid+'">\n' +
+								'\t\t\t\t\t\t\t<img style="width: 100%"\n' +
+								'\t\t\t\t\t\t\t\t id="'+good.gid+'" onMouseOver="changeImg(\''+good.gid+'\',\''+gimg2+'\')" ' +
+								'\t\t\t\t\t\t\t\t onMouseOut="changeImg(\''+good.gid+'\',\''+gimg1+'\')"\n' +
+								'\t\t\t\t\t\t\t\t src="'+gimg1+'">\n' +
+								'\t\t\t\t\t\t</a>\n' +
+								'\t\t\t\t\t\t<a href="/goodsPage/detail?gid='+good.gid+'">\n' +
+								'\t\t\t\t\t\t\t<div class="text-block">\n' +
+								'\t\t\t\t\t\t\t\t<p style="font-size: 12px;color: #000000">'+good.gname1+'</p>\n' +
+								'\t\t\t\t\t\t\t\t<p style="font-size: 12px;color: #000000">'+good.gname2+'</p>\n' +
+								'\t\t\t\t\t\t\t\t<p style="font-size: 12px;color: #dd0000">$'+good.gprice+'</p>\n' +
+								'\t\t\t\t\t\t\t</div>\n' +
+								'\t\t\t\t\t\t</a>\n' +
+								'\t\t\t\t\t</div>\n' +
+								'\t\t\t\t</div>';
+						lis += li;
+						if((i+1)%5==0){
+							lis+='</div><div class="row">' +
+									'<br/><br/>';
+						}
+					}
+					lis+='</div>';
+					$("#goods-list").html(lis);
+				});
+			});
+
+
+			function changeImg(id, path)
+			{
+				document.getElementById(id).src=path;
+			}
+
+
+		</script>
+
+	</head>
+	<body>
+
+        <!-- 菜单栏开始-->
+	<div id="header"></div>
+        <!-- 菜单栏结束-->
+		
+		<!-- 黄色部分开始 -->
+		<div>
+			<div class="container-fluid" style="width: 1480px">
+				<div class="row row-yellow">
+					<div class="col-xs-12">
+						<div class="mid-yellow01">
+							<div class="mid-yellow02">
+								<div class="mid-yellow02-1">Collections</div>
+								<div class="mid-yellow02-2">Sale</div>
+								<div class="mid-yellow02-3">
+									Grab a sweet sale deal now  🤯
+									</br>
+									~ No Returns
+									<br/>
+									~ No Exchanges
+									<br/>
+									~ No Loyalty used or gained
+
+								</div>
+							</div>
+							<div class="mid-yellow03">
+								<img src="https://cdn.shopifycdn.net/s/files/1/0039/3312/collections/Screen_Shot_2019-06-28_at_4.12.24_PM_1260x.png?v=1630716888" />
+							</div>
+						</div>  
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- 黄色部分结束 -->
+
+		<!--商品列表开始-->
+		<div class="container-fluid">
+			<div class="row" style="margin-left: 20px;margin-top: 20px">
+				<h2>Sale</h2>
+			</div>
+		</div>
+
+
+		<div id="goods-list" class="container-fluid list0" style="margin-left: 25px;margin-top: 10px">
+
+			<div class="row list2">
+
+				<div class="col-md-1-5 list1 ">
+					<div>
+						<a href="#">
+							<img style="width: 100%"
+								 id="img1" onMouseOver="changeImg('img1','//cdn.shopifycdn.net/s/files/1/0039/3312/products/rollas_organiclong_jetblack2_720x.jpg?v=1615352623')"
+								 onMouseOut="changeImg('img1','https://cdn.shopifycdn.net/s/files/1/0039/3312/products/ARCADE_EverybodyLovesHoodie-black_1_x800.jpg?v=1623196092')"
+								 src="https://cdn.shopifycdn.net/s/files/1/0039/3312/products/ARCADE_EverybodyLovesHoodie-black_1_x800.jpg?v=1623196092">
+						</a>
+						<a href="#">
+							<div class="text-block">
+								<p style="font-size: 12px;color: #000000">ARCADE</p>
+								<p style="font-size: 12px;color: #000000">Everybody Loves Hoodie - black</p>
+								<p style="font-size: 12px;color: #dd0000">$75.00</p>
+							</div>
+						</a>
+					</div>
+				</div>
+
+
+			</div>
+		</div>
+
+	<!--尾部开始-->
+	<div id="footer"></div>
+	<!--尾部结束-->
+
+
+	</body>
+</html>

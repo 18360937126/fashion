@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.hysf.mapper.CartMapper">
+<insert id="addGoodsInMyCart">
+    insert into cart(gid,uid,date) values (#{gid},#{uid},#{date})
+</insert>
+    <select id="findGidsByUid" resultType="java.lang.Integer">
+        select gid from cart where uid = #{uid}
+    </select>
+    <select id="findGartsByUid" resultType="cn.hysf.model.Cart">
+        select * from cart where uid = #{uid}
+    </select>
+    <delete id="deleteCartByCid">
+        delete from cart where cid = #{cid}
+    </delete>
+
+    <select id="findCartNumbersByUid" resultType="java.lang.Integer">
+        select count(*) from cart where uid = #{uid}
+    </select>
+    <select id="findAllGids" resultType="java.lang.Integer">
+        select gid from cart
+    </select>
+</mapper>

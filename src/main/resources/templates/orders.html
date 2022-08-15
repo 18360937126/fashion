@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>My Cart</title>
+    <link rel="stylesheet" type="text/css" href="css/product-orders.css" />
+    <script src="js/jquery-3.4.1.min.js" type="text/javascript" charset="utf-8"></script>
+
+    <link rel="stylesheet" type="text/css" href="css/sweetalert.css">
+    <script type="text/javascript" src="js/sweetalert-dev.js"></script>
+
+    <script>
+        $(function () {
+            $("#headerPage").load("header.html");
+            $("#footerPage").load("footer.html");
+            $.get("/findUserName",{},function (user) {
+                if(user){
+                    //判断依据登录，再来编辑购物车页面
+                    $.get("/orders/findOrdersByUid",{uid:user.uid},function (data) {
+                        var li='';
+                        var lis='';
+                        var allprice = 0.00;
+                        for (var i = 0; i < data.length; i++) {
+                            var orders = data[i];
+                            li=' <tr>\n' +
+                                '                        <td>'+orders.oid+'</td>\n' +
+                                '                        <td>'+orders.status+'</td>\n' +
+                                '                        <td>'+orders.date+'</td>\n' +
+                                '                        <td>\n' +
+                                '                            <a href="/ordersPage/ordersInfo?oid='+orders.oid+'"><span style="font-size: 13px;color: black">Check</span></a>&nbsp;&nbsp;\n' +
+                                '                            <a href="#" onclick="deleteOrders('+orders.oid+')"><span style="font-size: 13px;color: black">Delete</span></a>\n' +
+                                '                        </td>\n' +
+                                '                    </tr>';
+                            lis+=li;
+                        }
+                        $("#ordersInfomation").html(lis);
+                    });
+                }
+            });
+        });
+
+        function deleteOrders(oid){
+            swal({
+                    title: "Are you sure to delete?",
+                    text: "You will not be able to resume the order!",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Confirm Delete!",
+                    cancelButtonText: "Cancel Delete!",
+                    closeOnConfirm: false,
+                    closeOnCancel: false
+                },
+                function(isConfirm){
+                    if (isConfirm) {
+                        $.get("/orders/deleteBigOrdersByOid",{oid:oid},function (count) {
+                            if(count>0){
+                                swal("Delete!", "Your order has been deleted.",
+                                    "success");
+                            }else{
+                                swal("Sorry!", "Deletion failed.",
+                                    "error");
+                            }
+                        });
+                    } else {
+                        swal("Cancel!", "Cancel delete order.",
+                            "error");
+                    }
+                });
+        }
+
+
+        function numSub(num1, num2) {
+            var baseNum, baseNum1, baseNum2;
+            try {
+                baseNum1 = num1.toString().split(".")[1].length;
+            } catch (e) {
+                baseNum1 = 0;
+            }
+            try {
+                baseNum2 = num2.toString().split(".")[1].length;
+            } catch (e) {
+                baseNum2 = 0;
+            }
+            baseNum = Math.pow(10, Math.max(baseNum1, baseNum2));
+            return (num1 * baseNum + num2 * baseNum) / baseNum;
+        };
+    </script>
+</head>
+<body>
+<!--头部开始-->
+<div id="headerPage"></div>
+<!--头部结束-->
+
+<!--订单开始-->
+<div class="container-fluid">
+    <div class="row">
+
+        <div class="col-md-4">
+            <h1 style="margin-left: 30px">Your Orders</h1>
+            <br>
+            <a href="/" style="margin-left: 30px">
+                <span class="arrow-back-link__arrow">←</span>
+                <span style="font-size: 13px;color: #000000">Keep shopping</span>
+            </a>
+
+        </div>
+
+        <!--订单列表开始-->
+        <div class="col-md-7">
+
+            <div id="goodsInfo">
+            <!--订单信息开始-->
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th scope="col">Order No</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Order time</th>
+                        <th scope="col">Operate</th>
+                    </tr>
+                    </thead>
+                    <tbody id="ordersInfomation">
+
+
+                    </tbody>
+                </table>
+
+             <!--订单信息结束-->
+            </div>
+            <div class="col-md-1"></div>
+
+        </div>
+        <!--订单列表结束-->
+    </div>
+
+</div>
+<!--订单结束-->
+<br><br>
+
+
+<!--尾部开始-->
+<div id="footerPage"></div>
+<!--尾部结束-->
+</body>
+</html>

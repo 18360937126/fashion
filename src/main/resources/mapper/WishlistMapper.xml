@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.hysf.mapper.WishlistMapper">
+    <select id="findListByUidAndGid" resultType="cn.hysf.model.Wishlist">
+        select * from wishlist where uid = #{uid} and gid = #{gid}
+    </select>
+    <insert id="addMyWishList">
+        insert into wishlist(uid,gid,date) values(#{uid},#{gid},#{date})
+    </insert>
+    <delete id="deleteMyWishListByUidAndGid">
+        delete from wishlist where uid = #{uid} and gid = #{gid}
+    </delete>
+    <select id="findMyWishListByUid" resultType="cn.hysf.model.Wishlist">
+        select * from wishlist where uid = #{uid}
+    </select>
+    <delete id="deleteMyWishlistByWid">
+        delete from wishlist where wid = #{wid}
+    </delete>
+    <select id="findWishListNumbersByUid" resultType="java.lang.Integer">
+        select count(*) from wishlist where uid = #{uid}
+    </select>
+    <select id="findAllGids" resultType="java.lang.Integer">
+        select gid from wishlist
+    </select>
+    <select id="findGidsByUid" resultType="java.lang.Integer">
+        select gid from wishlist where uid = #{uid}
+    </select>
+</mapper>

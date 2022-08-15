@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>My Cart</title>
+    <link rel="stylesheet" type="text/css" href="css/product-orders.css" />
+
+    <link rel="stylesheet" type="text/css" href="css/sweetalert.css">
+    <script type="text/javascript" src="js/sweetalert-dev.js"></script>
+    <script src="js/jquery-3.4.1.min.js" type="text/javascript" charset="utf-8"></script>
+    <link rel="stylesheet" type="text/css" href="css/ordersInfo.css" />
+    <script type="text/javascript" src="js/ordersInfo.js" charset="utf-8"></script>
+    <style>
+        .cleanfloat::after{display: block; clear: both; content:""; visibility: hidden; height: 0;}/*清浮动*/
+        .xing {list-style:none; float:left; font-size:30px; margin:5px; color:#ccc; cursor:pointer;}/*五角星样式*/
+        .hs,.cs{color:yellow;}/*五角星点击后样式*/
+    </style>
+    <script>
+
+
+      function changeLi() {
+          $(".xing").hover(function(){
+              $(this).addClass('hs');
+              $(this).prevAll().addClass('hs');
+          },function(){
+              $(this).removeClass('hs');
+              $(this).prevAll().removeClass('hs');
+          })
+
+          $(".xing").click(function () {
+              $(this).addClass('cs');
+              $(this).prevAll().addClass('cs');
+              $(this).nextAll().removeClass('cs');
+          })
+      }
+
+        $(function (){
+            changeLi();
+            $("#headerPage").load("header.html");
+            $("#footerPage").load("footer.html");
+
+            $("#orderNo").val([[${oid}]]);
+            
+            $.get("/findUserName",{},function (user) {
+                if(user){
+                    //判断依据登录，再来编辑购物车页面
+                    $.get("/orders/findOrdersInfoByOid",{oid:[[${oid}]]},function (data) {
+                        var data1 = data[0];
+                        $("#inputEmail4").val(data1.email);
+                        $("#username").val(data1.username);
+                        $("#address").val(data1.address);
+                        $("#postalcode").val(data1.postal);
+                        $("#phone").val(data1.phone);
+                        $("#city").val(data1.city);
+                    });
+                }
+            });
+
+            loadOrdersInfo([[${oid}]]);
+        });
+
+        function loadOrdersInfo(oid) {
+            $.get("/orders/findOrdersInfoDetailList",{oid:oid},function (data) {
+                var li = '';
+                var lis = '   <thead>\n' +
+                    '                    <tr>\n' +
+                    '                        <th scope="col">Product</th>\n' +
+                    '                        <th scope="col">Brand</th>\n' +
+                    '                        <th scope="col">Name</th>\n' +
+                    '                        <th scope="col">Size</th>\n' +
+                    '                        <th scope="col">Price</th>\n' +
+                    '                        <th scope="col">Operate</th>\n' +
+                    '                    </tr>\n' +
+                    '                    </thead>';
+                for (var i = 0; i < data.length; i++) {
+                    var info = data[i];
+                    li = '<tbody> ' +
+                        ' <td style="width: 10%">\n' +
+                        '          <a href="/goodsPage/detail?gid='+info.gid+'">' +
+                        '           <img style="width: 100%" src="'+info.gimg1+'">\n' +
+                        '           </a>' +
+                        ' </td>\n' +
+                        '                        <td>\n' +
+                        '                            <br>\n' +
+                        '                            <span>'+info.gname1+'</span>\n' +
+                        '                        </td>\n' +
+                        '                        <td>\n' +
+                        '                            <br>\n' +
+                        '                            <span>'+info.gname2+'</span>\n' +
+                        '                        </td>\n' +
+                        '                        <td>\n' +
+                        '                            <br>\n' +
+                        '                            <span>'+info.gsize1+'</span>\n' +
+                        '                        </td>\n' +
+                        '                        <td>\n' +
+                        '                            <br>\n' +
+                        '                            <span>$'+info.gprice+'</span>\n' +
+                        '                        </td>\n' +
+                        '                        <td>\n' +
+                        '                            <br>\n' +
+                        '                            <a href="#" type="button" data-toggle="modal" data-target="#myModal'+info.id+'" style="font-size: 13px;color: black">Comment</a> &nbsp;&nbsp;\n' +
+                        '                            <a href="#" onclick="deleteOrdersInfo('+info.id+')" style="font-size: 13px;color: black">Delete</a>\n' +
+                        '                        </td>' +
+                    '</tbody>' ;
+                    lis += li;
+                }
+
+                var li1 ='';
+                var lis1 ='';
+                for (var i = 0; i < data.length; i++) {
+                    var info = data[i];
+                    li1 = '<!-- Modal -->\n' +
+                        '<div style="border-radius: 0px;" class="modal fade" id="myModal'+info.id+'" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">\n' +
+                        '  <div style="border-radius: 0px;" class="modal-dialog" role="document">\n' +
+                        '    <div style="border-radius: 0px;" class="modal-content">\n' +
+                        '      <div style="border-radius: 0px;" class="modal-header">\n' +
+                        '        <button  type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>\n' +
+                        '        <h4 class="modal-title" id="myModalLabel">Commit</h4>\n' +
+                        '      </div>\n' +
+                        '      <div style="border-radius: 0px;" class="modal-body">\n' +
+                        '' +
+                        '<form>\n' +
+                        '<div class="form-group">\n' +
+                        '<input type="radio" value="0" class="form-check" checked name="level'+info.id+'">' +
+                        '<span>Recommend</span>' +
+                        '<input type="radio" value="1" class="form-check" name="level'+info.id+'">' +
+                        '<span>Not Recommend</span>' +
+                        '            </div>\n' +
+                        '            <div class="form-group">\n' +
+                        '                <input type="text" class="form-control" name="comment'+info.id+'" placeholder="Please write down your comments.">\n' +
+                        '                <input type="hidden" class="form-control" name="id" value="'+info.id+'">\n' +
+                        '            </div>\n' +
+                        '            <button type="button" onclick="submitMethod('+info.id+')" class="btn btn-primary">Submit</button>\n' +
+                        '   </form>' +
+                        '' +
+                        '      </div>\n' +
+                        '      <div style="border-radius: 0px;" class="modal-footer">\n' +
+                        '        <button style="border-radius: 0px;" type="button" class="btn btn-default" data-dismiss="modal">Close</button>\n' +
+                        '      </div>\n' +
+                        '    </div>\n' +
+                        '  </div>\n' +
+                        '</div>' +
+                        '';
+                    lis1 += li1;
+                }
+
+                $("#orderinfo").html(lis);
+                $("#motaikuang").html(lis1);
+            });
+        }
+
+
+
+        function deleteOrdersInfo(id){
+            swal({
+                    title: "Are you sure to delete?",
+                    text: "You will not be able to resume the order!",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Confirm Delete!",
+                    cancelButtonText: "Cancel Delete!",
+                    closeOnConfirm: false,
+                    closeOnCancel: false
+                },
+                function(isConfirm){
+                    if (isConfirm) {
+                        $.get("/orders/deleteOrdersInfoById",{id:id},function (count) {
+                            if(count>0){
+                                swal("Delete!", "Your order has been deleted.",
+                                    "success");
+                            }else{
+                                swal("Sorry!", "Deletion failed.",
+                                    "error");
+                            }
+                        });
+                    } else {
+                        swal("Cancel!", "Cancel delete order.",
+                            "error");
+                    }
+                });
+        }
+
+
+        function submitMethod(id) {
+            var level = $('input[name="level'+id+'"]:checked').val();
+            var comment = $('input[name="comment'+id+'"]').val();
+            swal({
+                    title: "Are you sure to Comment?",
+                    text: "",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Confirm Comment!",
+                    cancelButtonText: "Cancel Comment!",
+                    closeOnConfirm: false,
+                    closeOnCancel: false
+                },
+                function(isConfirm){
+                    if (isConfirm) {
+                        $.get("/comment/makeAnComment",{id:id,level:level,comment:comment},function (count) {
+                            if(count>0){
+                                swal("Success!", "Your order has been Comment.",
+                                    "success");
+                            }else{
+                                swal("Sorry!", "This order has been reviewed.",
+                                    "error");
+                            }
+                        });
+                    } else {
+                        swal("Cancel!", "Cancel Comment Order.",
+                            "error");
+                    }
+                });
+
+
+            }
+
+
+
+
+    </script>
+</head>
+<body>
+<!--头部开始-->
+<div id="headerPage"></div>
+<!--头部结束-->
+
+<!--订单开始-->
+<div class="container-fluid">
+    <div class="row">
+
+        <div class="col-md-4">
+            <h1 style="margin-left: 30px">Your OrdersInfo</h1>
+            <br>
+            <a href="/ordersPage/mainPage" style="margin-left: 30px">
+                <span class="arrow-back-link__arrow">←</span>
+                <span style="font-size: 13px;color: #000000">Back to Orders</span>
+            </a>
+            <br>
+
+            <form id="addressInfomation" style="margin-left: 20px">
+                <div class="form-row">
+                    <div class="form-group col-md-10">
+                        <h3>Your Personal Infomation</h3>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-md-10">
+                        <label for="orderNo">Order No</label>
+                        <input type="text" id="orderNo" class="form-control" placeholder="Order No" disabled="disabled" >
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-md-10">
+                        <label for="inputEmail4">Email</label>
+                        <input type="text" class="form-control" name="email" id="inputEmail4" placeholder="Email" disabled="disabled">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-md-5">
+                        <label for="city">City</label>
+                        <input type="text" id="city" class="form-control" name="city" placeholder="City" disabled="disabled">
+                    </div>
+                    <div class="form-group col-md-5">
+                        <label for="postalcode">Postal Code</label>
+                        <input type="text" id="postalcode" class="form-control" name="postal" placeholder="Postal Code" disabled="disabled">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-md-10">
+                        <label for="username">Name</label>
+                        <input type="text" id="username" class="form-control" name="username" placeholder="Name" disabled="disabled">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-md-10">
+                        <label for="address">Address</label>
+                        <input type="text" id="address" class="form-control" name="address" placeholder="Address" disabled="disabled">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-md-10">
+                        <label for="phone">Phone</label>
+                        <input type="text" id="phone" class="form-control" name="phone" placeholder="Phone" disabled="disabled">
+                    </div>
+                </div>
+            </form>
+
+        </div>
+
+        <!--订单列表开始-->
+        <div class="col-md-7">
+
+            <div>
+            <!--订单信息开始-->
+                <table class="table" id="orderinfo">
+                    <thead>
+                    <tr>
+                        <th scope="col">Product</th>
+                        <th scope="col">Brand</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Size</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Operate</th>
+                    </tr>
+                    </thead>
+
+
+                </table>
+
+             <!--订单信息结束-->
+            </div>
+            <div class="col-md-1"></div>
+
+        </div>
+        <!--订单列表结束-->
+    </div>
+
+</div>
+<!--订单结束-->
+<br><br>
+
+<div id="motaikuang"></div>
+
+<!--<ul class="cleanfloat">
+    <li class="xing" value="1">★</li>
+    <li class="xing" value="2">★</li>
+    <li class="xing" value="3">★</li>
+    <li class="xing" value="4">★</li>
+    <li class="xing" value="5">★</li>
+</ul>-->
+
+<!--尾部开始-->
+<div id="footerPage"></div>
+<!--尾部结束-->
+</body>
+</html>

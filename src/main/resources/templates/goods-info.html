@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="utf-8">
+		<title>As Good As Gold</title>
+		<!-- 强制浏览器以最新的版本渲染页面 -->
+		<meta http-equiv="X-UA-Compatible" content="IE=edg" />
+		<meta name="viewport"
+			content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link rel="stylesheet" type="text/css" href="css/goods-detail.css" >
+		<link rel="stylesheet" type="text/css" href="css/home.css" >
+		<script src="js/jquery-3.4.1.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/home.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/getParameter.js" type="text/javascript" charset="utf-8"></script>
+		<link rel="stylesheet" href="css/ordersInfo.css">
+		<link rel="stylesheet" type="text/css" href="css/sweetalert.css">
+		<script type="text/javascript" src="js/sweetalert-dev.js"></script>
+		<script src="js/Pagination.js"></script>
+
+		<style type="text/css">
+			.col-xs-1-5,
+			.col-sm-1-5,
+			.col-md-1-5,
+			.col-lg-1-5 {
+				position: relative;
+				min-height: 1px;
+				margin-right: 10px;
+				margin-left: 10px;
+
+			}
+
+			.col-xs-1-5 {
+				width: 18%;
+				float: left;
+			}
+
+			@media (min-width: 768px) {
+				.col-sm-1-5 {
+					width: 18%;
+					float: left;
+				}
+			}
+
+			@media (min-width: 992px) {
+				.col-md-1-5 {
+					width: 18%;
+					float: left;
+				}
+			}
+
+			@media (min-width: 1200px) {
+				.col-lg-1-5 {
+					width: 18%;
+					float: left;
+				}
+			}
+		</style>
+		<script th:inline="javascript">
+			$(function () {
+				$("#header").load("header.html");
+				$("#footer").load("footer.html");
+				load([[${gid}]]);
+				findRecommendTypeGoods([[${gid}]]);
+				findRecommendGoods([[${gid}]]);
+
+				//先查询是否已经收藏
+				$.get("/wishlist/findMyWishListByGid", {gid: [[${gid}]]}, function (date) {
+					if (date == 1) {
+						$(".like").toggleClass('cs');
+					}
+				});
+
+				$(".like").click(function () {
+					$.get("/findUserName", {}, function (user) {
+						if (user) {
+							$(this).toggleClass('cs');
+						}
+					})
+
+				});
+			});
+
+				function show(a) {
+					if(a==$("#span-size1").text()){
+						$("#size-name").html(a);
+					}
+					if(a==$("#span-size2").text()){
+						$("#size-name").html(a);
+					}
+				}
+
+				//根据种类查找推荐商品
+				function findRecommendTypeGoods(gid) {
+					$.get("/goods/findTypeRecommendGoods",{gid:gid},function (data) {
+						var li = '';
+						var lis = '<div class="row list2">';
+						for (var i = 0; i < 5; i++) {
+							var good = data[i];
+							var gimg1 = good.gimg1;
+							var gimg2 = good.gimg2;
+							li='<div class="col-md-1-5 list1 ">\n' +
+									'\t\t\t\t\t<div>\n' +
+									'\t\t\t\t\t\t<a href="/goodsPage/detail?gid='+good.gid+'">\n' +
+									'\t\t\t\t\t\t\t<img style="width: 100%"\n' +
+									'\t\t\t\t\t\t\t\t id="'+good.gid+'" onMouseOver="changeImg(\''+good.gid+'\',\''+gimg2+'\')" ' +
+									'\t\t\t\t\t\t\t\t onMouseOut="changeImg(\''+good.gid+'\',\''+gimg1+'\')"\n' +
+									'\t\t\t\t\t\t\t\t src="'+gimg1+'">\n' +
+									'\t\t\t\t\t\t</a>\n' +
+									'\t\t\t\t\t\t<a href="/goodsPage/detail?gid='+good.gid+'">\n' +
+									'\t\t\t\t\t\t\t<div class="text-block">\n' +
+									'\t\t\t\t\t\t\t\t<p style="font-size: 12px;color: #000000">'+good.gname1+'</p>\n' +
+									'\t\t\t\t\t\t\t\t<p style="font-size: 12px;color: #000000">'+good.gname2+'</p>\n' +
+									'\t\t\t\t\t\t\t\t<p style="font-size: 12px;color: #dd0000">$'+good.gprice+'</p>\n' +
+									'\t\t\t\t\t\t\t</div>\n' +
+									'\t\t\t\t\t\t</a>\n' +
+									'\t\t\t\t\t</div>\n' +
+									'\t\t\t\t</div>';
+							lis += li;
+							if((i+1)%5==0){
+								lis+='</div><div class="row">' +
+										'<br/><br/>';
+							}
+						}
+						lis+='</div>';
+						$("#goods-list").html(lis);
+					});
+				}
+
+			//协同过滤算法查找推荐商品
+			function findRecommendGoods(gid) {
+				$.get("/goods/findRecommendGoods",{gid:gid},function (data) {
+					var li = '';
+					var lis = '<div class="row list2">';
+					for (var i = 0; i < 5; i++) {
+						var good = data[i];
+						var gimg1 = good.gimg1;
+						var gimg2 = good.gimg2;
+						li='<div class="col-md-1-5 list1 ">\n' +
+								'\t\t\t\t\t<div>\n' +
+								'\t\t\t\t\t\t<a href="/goodsPage/detail?gid='+good.gid+'">\n' +
+								'\t\t\t\t\t\t\t<img style="width: 100%"\n' +
+								'\t\t\t\t\t\t\t\t id="'+good.gid+'" onMouseOver="changeImg(\''+good.gid+'\',\''+gimg2+'\')" ' +
+								'\t\t\t\t\t\t\t\t onMouseOut="changeImg(\''+good.gid+'\',\''+gimg1+'\')"\n' +
+								'\t\t\t\t\t\t\t\t src="'+gimg1+'">\n' +
+								'\t\t\t\t\t\t</a>\n' +
+								'\t\t\t\t\t\t<a href="/goodsPage/detail?gid='+good.gid+'">\n' +
+								'\t\t\t\t\t\t\t<div class="text-block">\n' +
+								'\t\t\t\t\t\t\t\t<p style="font-size: 12px;color: #000000">'+good.gname1+'</p>\n' +
+								'\t\t\t\t\t\t\t\t<p style="font-size: 12px;color: #000000">'+good.gname2+'</p>\n' +
+								'\t\t\t\t\t\t\t\t<p style="font-size: 12px;color: #dd0000">$'+good.gprice+'</p>\n' +
+								'\t\t\t\t\t\t\t</div>\n' +
+								'\t\t\t\t\t\t</a>\n' +
+								'\t\t\t\t\t</div>\n' +
+								'\t\t\t\t</div>';
+						lis += li;
+						if((i+1)%5==0){
+							lis+='</div><div class="row">' +
+									'<br/><br/>';
+						}
+					}
+					lis+='</div>';
+					$("#goods-list2").html(lis);
+				});
+			}
+
+
+				function changeImg(id, path)
+				{
+					document.getElementById(id).src=path;
+				}
+
+				function load(gid) {
+					$.get("/goods/findGoodsByGid",{gid:gid},function (data) {
+						/*主页图片*/
+						var li1='<img src="'+data.gimg1+'" style="width:100%;height: 100%" >';
+						$("#gpic1").html(li1);
+						/*尺寸*/
+						var li2 = '<li style="border-radius: 0px" class="goods-size-li"><a href="#" id="a-size1" onclick="show($(this).text())"><span id="span-size1">'+data.gsize1+'</span></a></li>\n' +
+								'<li style="border-radius: 0px" class="goods-size-li"><a href="#" id="a-size2" onclick="show($(this).text())"><span id="span-size2">'+data.gsize2+'</span></a></li>';
+						$("#ul-size").html(li2);
+						/*商品名称*/
+						$("#goods-name1").html(data.gname1);
+						$("#goods-name2").html(data.gname2);
+						/*价格*/
+						$("#gprice").html("$"+data.gprice);
+						/*简介*/
+						$("#goods-info").html(data.ginfo);
+						/*详细图片*/
+						if(data.gimg2!=null){
+							var goodsImg2 = '<img src="'+data.gimg2+'">';
+							$("#gimg2").html(goodsImg2);
+						}
+						if(data.gimg3!=null){
+							var goodsImg3 = '<img src="'+data.gimg3+'">';
+							$("#gimg3").html(goodsImg3);
+						}
+						if(data.gimg4!=null){
+							var goodsImg4 = '<img src="'+data.gimg4+'">';
+							$("#gimg4").html(goodsImg4);
+						}
+						if(data.gimg5!=null){
+							var goodsImg5 = '<img src="'+data.gimg5+'">';
+							$("#gimg5").html(goodsImg5);
+						}
+						if(data.gimg6!=null){
+							var goodsImg6 = '<img src="'+data.gimg6+'">';
+							$("#gimg6").html(goodsImg6);
+						}
+						if(data.gimg7!=null){
+							var goodsImg7 = '<img src="'+data.gimg7+'">';
+							$("#gimg7").html(goodsImg7);
+						}
+						if(data.gimg8!=null){
+							var goodsImg8 = '<img src="'+data.gimg8+'">';
+							$("#gimg8").html(goodsImg8);
+						}
+						if(data.gimg9!=null){
+							var goodsImg9 = '<img src="'+data.gimg9+'">';
+							$("#gimg9").html(goodsImg9);
+						}
+					});
+				}
+
+
+				function addMyCarts() {
+					$.get("/cart/addMyCarts",{gid:[[${gid}]]},function (data) {
+						if(data==0){
+							swal("Sorry","you are not logged in.","error");
+						}else{
+							swal("Congratulations"," product added successfully","success")
+						}
+					});
+				}
+
+				function addWishList() {
+					$.get("/wishlist/addMyWishlist",{gid:[[${gid}]]},function (data) {
+						if(data==0){
+							swal("Sorry","you are not logged in.","error");
+						}else{
+							$(".like").toggleClass('cs');
+						}
+					});
+				}
+
+		</script>
+
+	</head>
+	<body>
+
+        <!-- 菜单栏开始-->
+	<div id="header"></div>
+        <!-- 菜单栏结束-->
+
+		<div class="wrapper container">
+			<!--商品图片-->
+			<div class="goods row">
+
+				<div class=" col-md-6" id="gpic1" style="padding-right: 50px">
+
+
+					<img src="//cdn.shopifycdn.net/s/files/1/0039/3312/products/Stan-Ray-Down-Jacket---purple__1_720x.jpg?v=1634784093"
+						 style="width:100%;height: 100%" >
+
+
+				</div>
+
+
+
+				<!--商品信息-->
+
+				<div class="goods-info  col-md-6">
+					<div style="margin-left: 10%">
+						<a href="/" style="width:15px;height:15px;border-radius:50%;background-color:red;color: white">龍</a>
+						<a href="/" style="color: #7F7F7F;font-size: 12px">ON SALE</a></a>
+					</div>
+					<div class="goods-font">
+						<!--名称-->
+						<div id="goods-name1" style="color: #282828;font-size: 12px">
+							STAN RAY
+						</div>
+
+						<div id="goods-name2" style="font-size: 28px;color:#333333;">
+							Down Jacket - purple
+						</div>
+
+						<!--价格-->
+						<div id="gprice" style="font-size: 20px;color: #999999">
+							$499.95
+						</div>
+						<br>
+						<div>
+							<p style="font-size: 13px;color: #dd2531;font-weight: bolder">GRAB A SWEET SALE DEAL !</p>
+							<p style="font-size: 13px;color: #dd2531;font-weight: bolder">🎄 Last Day for Christmas Orders ~ 11am 20th Dec 🎄</p>
+						</div>
+						<br>
+
+
+						<!--尺寸下拉列表-->
+						<div class="dropdown goods-size">
+							<button  style="border-radius: 0px" class="btn btn-default dropdown-toggle goods-size-btn" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+								<span id="size-name">MEDIUM</span>
+								<span class="caret"></span>
+							</button>
+							<ul class="dropdown-menu" id="ul-size" aria-labelledby="dropdownMenu1">
+								<li style="border-radius: 0px" class="goods-size-li"><a href="#" id="a-size1" onclick="show($(this).text())"><span id="span-size1">XL</span></a></li>
+                                <li style="border-radius: 0px" class="goods-size-li"><a href="#" id="a-size2" onclick="show($(this).text())"><span id="span-size2">XXL</span></a></li>
+							</ul>
+						</div>
+
+						<!--添加收藏 按钮-->
+						<div class="addFavourite">
+							<a  class="addFavourite-btn btn  btn-lg " onclick="addMyCarts()" style="border-radius: 0px">Add to Cart</a>
+							<div class="addFavourite2">
+								<a class="addFavourite-btn2 btn  btn-lg " onclick="addWishList()" style="border-radius: 0px">
+									<span class="like">&#10084;</span>
+								</a>
+							</div>
+						</div>
+
+						<!--商品详细信息介绍-->
+						<p class="p-size-guide"><a href="#">Sizing guide</a></p>
+						<!--<p id="goods-idea">Henrik Vibskov Slow Bucket Hat - mint/blue</p>-->
+						<div id="goods-infomation">
+							<!--详细信息-->
+							<div id="goods-info" style="font-size:14px;color:#4D4D4D;font-weight: bolder ">
+								Stan Ray Down Jacket - purple
+								The new down series by Stan Ray takes inspiration from a love of 70s and 80s outerwear, as seen from their European view point of American cinematography both on and off screen. The AW21 Down Jacket is constructed from a 2 layer nylon oxford cloth, this fabric has a similar feel to nylon oxfords used to construct 80s vintage cold weather jackets but our 2 layer fabric features a bonded membrane that gives the jacket waterproof performance up to 5000mm.
+							</div>
+
+
+							<div id="goods-ul">
+								<p>Sizing: True to size</p>
+								<p>Materials: 50% Cotton, 50% Polyester</p>
+
+								<p> - Front graphics</p>
+								<p>- That 'perfect' hoodie</p>
+
+							</div>
+						</div>
+
+					</div>
+
+
+				</div>
+			</div>
+
+
+		</div>
+		<!--商品信息结束-->
+
+		<!--详细图片开始-->
+		<div class="goods-pictures container">
+
+			<div class="goods-picture1 row">
+				<div class="col-sm-6 goods-picture11" id="gimg2">
+                </div>
+                <div class="col-sm-6 goods-picture11" id="gimg3">
+                </div>
+			</div>
+
+			 <div class="goods-picture2 row">
+                 <div class="col-sm-6 goods-picture22" id="gimg4">
+                 </div>
+                 <div class="col-sm-6 goods-picture22" id="gimg5">
+                 </div>
+             </div>
+
+			<div class="goods-picture1 row">
+				<div class="col-sm-6 goods-picture11" id="gimg6">
+				</div>
+				<div class="col-sm-6 goods-picture11" id="gimg7">
+				</div>
+			</div>
+
+			<div class="goods-picture2 row">
+				<div class="col-sm-6 goods-picture22" id="gimg8">
+				</div>
+				<div class="col-sm-6 goods-picture22" id="gimg9">
+				</div>
+			</div>
+		</div>
+
+
+		<hr>
+
+
+		<!--根据种类推荐商品-->
+		<div class="container-fluid">
+			<div class="row" style="margin-left: 20px;margin-top: 20px">
+				<h2>Check These Out</h2>
+			</div>
+		</div>
+
+		<div id="goods-list" class="container-fluid list0" style="margin-left: 25px;margin-top: 10px">
+		</div>
+		<!--根据种类推荐商品结束-->
+		<hr>
+		<!--根据个人兴趣点击收藏等推荐-->
+		<div class="container-fluid">
+			<div class="row" style="margin-left: 20px;margin-top: 20px">
+				<h2>Not to be creepy, but our robot recommends that you look at these</h2>
+			</div>
+		</div>
+
+		<div id="goods-list2" class="container-fluid list0" style="margin-left: 25px;margin-top: 10px">
+		</div>
+		<!--根据个人兴趣点击收藏等推荐结束-->
+
+
+
+
+
+		<!--评论区-->
+		<div class="container-fluid">
+
+			<div class="row" >
+
+				<div class="col-md-6" th:each="comment : ${comments}">
+					<div class="comment-wrap">
+						<div class="photo">
+							<div class="avatar" th:style="'background-image:url(' + ${comment.touxiang}+ ')'">
+							</div>
+						</div>
+						<div class="comment-block">
+							<span class="comment-actions" style="font-weight: bolder" th:text="${comment.recommend}"></span>
+							<span class="comment-text" style="font-weight: bolder" th:text="${comment.username}"></span>
+							<p class="comment-text" th:text="${comment.comment}">BeautiFul</p>
+							<div class="bottom-comment">
+								<div class="comment-date" th:text="${comment.date}">2021-12-06 11:04:02</div>
+								<ul class="comment-actions">
+									<li type="button" href="#" class="reply" data-toggle="modal"  th:data-target="'#motaikuang'+${comment.cid}">Reply</li>
+									<!--model-->
+									<div class="modal fade" th:id="'motaikuang'+${comment.cid}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+										<div class="modal-dialog">
+											<div class="modal-content">
+												<div class="modal-header">
+													<h5 class="modal-title" id="exampleModalLabel" style="color: black">Please enter the content you want to reply to.</h5>
+													<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+														<span aria-hidden="true"></span>
+													</button>
+												</div>
+												<div class="modal-body">
+													<form>
+														<input th:name="'reply'+${comment.cid}" class="form-control"><br>
+														<button type="button" class="btn btn-primary" th:onclick="|ReplyCommit(${comment.cid})|">Reply</button>
+													</form>
+												</div>
+												<div class="modal-footer">
+													<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+												</div>
+											</div>
+										</div>
+									</div>
+									<!--model-->
+								</ul>
+							</div>
+						</div>
+					</div>
+
+				</diV>
+
+			</div>
+
+			<!--翻页-->
+			<div class="modal-footer no-margin-top">
+				<ul class="pagination pull-right no-margin" th:if="${page.totalPages &gt; 0}">
+					<!-- 首页 -->
+					<li>
+						<a th:href="@{'/goodsPage/detail?pageNum=0&gid='+${gid}}">First</a>
+					</li>
+					<!-- 首页 -->
+					<!-- 中间页 -->
+					 <li th:each="pageNum:${#numbers.sequence(1, page.totalPages)}">
+						<a th:href="@{'/goodsPage/detail?pageNum=' + ${pageNum}+'&gid='+${gid}}"  th:text="${pageNum}" th:if="${pageNum ne page.pageNum}"></a>
+						<a th:href="@{'/goodsPage/detail?pageNum=' + ${pageNum}+'&gid='+${gid}}"  th:text="${pageNum}" th:if="${pageNum eq page.pageNum}" th:style="'font-weight:bold;background: #6faed9;'"></a>
+					</li>
+					<!-- 中间页 -->
+					<!-- 尾页 -->
+					<li>
+						<a th:href="@{'/goodsPage/detail?pageNum=' + ${page.totalPages }+'&gid='+${gid}}">Last</a>
+					</li>
+					<!-- 尾页 -->
+				</ul>
+			</div>
+			<!--翻页-->
+		</div>
+		<!--评论区-->
+
+
+
+
+	<!--尾部开始-->
+	<div id="footer"></div>
+	<!--尾部结束-->
+
+
+
+	<script>
+		function ReplyCommit(cid) {
+			var reply = $('input[name="reply'+cid+'"]').val();
+			swal({
+						title: "Are you sure to Reply?",
+						text: "",
+						type: "warning",
+						showCancelButton: true,
+						confirmButtonColor: "#DD6B55",
+						confirmButtonText: "Confirm Reply!",
+						cancelButtonText: "Cancel Reply!",
+						closeOnConfirm: false,
+						closeOnCancel: false
+					},
+					function(isConfirm){
+						if (isConfirm) {
+							$.get("/comment/makeAnReply",{cid:cid,reply:reply},function (count) {
+								if(count>0){
+									location.reload();
+								}else{
+									swal("Sorry!", "You are not logged in.",
+											"error");
+								}
+							});
+						} else {
+							swal("Cancel!", "Cancel Reply.",
+									"error");
+						}
+					});
+		}
+	</script>
+
+	</body>
+</html>

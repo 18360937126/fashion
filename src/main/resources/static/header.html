@@ -1,0 +1,248 @@
+<link rel="stylesheet" type="text/css" href="css/home.css" />
+<link rel="stylesheet" type="text/css" href="Bootstrap/bootstrap-3.3.7-dist/css/bootstrap.min.css" />
+<script src="Bootstrap/bootstrap-3.3.7-dist/js/bootstrap.min.js" type="text/javascript" charset="utf-8">
+</script>
+<link rel="stylesheet" type="text/css" href="css/test.css" />
+<link rel="stylesheet" type="text/css" href="css/product-orders.css" />
+<script src="js/home.js" type="text/javascript" charset="utf-8"></script>
+<script>
+$(function () {
+    $.get("/findUserName",{},function (data) {
+        if(data.username!=undefined){
+            var li = "Welcome,"+data.username;
+            $("#user-Name").html(li);
+
+            $.get("/cart/findCartNumbersByUid",{uid:data.uid},function (count) {
+                $("#cartNumbers").html(count);
+            });
+
+            $.get("/wishlist/findWishListNumbersByUid",{uid:data.uid},function (count) {
+                $("#wishListNumbers").html(count);
+            });
+
+            $.get("/cart/findMyCartsByUid2",{},function (data) {
+                var li='';
+                var lis='';
+                var allprice = 0.00;
+                for (var i = 0; i < data.length; i++) {
+                    var good = data[i];
+                    var price = good.gprice;
+                    allprice = numSub(allprice,price)
+                    li='<div class="row">\n' +
+                        '                <hr>\n' +
+                        '                <div class="col-md-1">\n' +
+                        '                    <a href="/goodsPage/detail?gid='+good.gid+'">\n' +
+                        '                        <img style="width: 100%" src="'+good.gimg1+'">\n' +
+                        '                    </a>\n' +
+                        '                </div>\n' +
+                        '                <div class="col-md-3">\n' +
+                        '                    <a href="#" >\n' +
+                        '                    <span style="font-size: 13px;color: #282828">'+good.gname1+'</span>\n' +
+                        '                    </a>\n' +
+                        '                    <span style="font-size: 20px;color: #888888">$'+good.gprice+'</span>\n' +
+                        '                    <br>\n' +
+                        '                    <span style="font-size: 13px;color: #282828">  Quantity:<span class="goods-quantity">1</span></span>\n' +
+                        '                    <br>\n' +
+                        '                    <span style="font-size: 13px;color: #282828">SIZE:'+good.gsize1+'</span>\n' +
+                        '                    <br>\n' +
+                        '                    <a href="/cart/deleteGoodInMyCart?cid='+good.cid+'" class="remove" style="font-size: 13px;color:#a8a8a8;">Remove</a>\n' +
+                        '                </div>\n' +
+                        '            </div>';
+                    lis+=li;
+
+                }
+                $("#fuhao1").html('$');
+                $("#cart-goods-info").html(lis);
+                $("#total-Price1").html(allprice);
+            });
+        }
+    });
+    //查询操作
+
+    $("#search-btn").click(function () {
+        var gname = $("#search-info").val();
+        location.href="goods-search.html?gname="+gname+"";
+    });
+});
+
+function numSub(num1, num2) {
+    var baseNum, baseNum1, baseNum2;
+    try {
+        baseNum1 = num1.toString().split(".")[1].length;
+    } catch (e) {
+        baseNum1 = 0;
+    }
+    try {
+        baseNum2 = num2.toString().split(".")[1].length;
+    } catch (e) {
+        baseNum2 = 0;
+    }
+    baseNum = Math.pow(10, Math.max(baseNum1, baseNum2));
+    return (num1 * baseNum + num2 * baseNum) / baseNum;
+};
+
+</script>
+<script type="text/javascript">
+    $('.btn-test').on('click',function () {
+        $('.btn-test').toggleClass('btnc');
+        $('.sidebar').toggleClass('side');
+    })
+</script>
+
+<div class="sidebar">
+
+    <br> <br>
+    <div class="container" >
+        <div class="row">
+            <div class="col-md-2">
+                <span style="font-size: 20px;color: #282828">Your Cart</span>
+            </div>
+        </div>
+
+        <!--商品信息开始-->
+        <div id="cart-goods-info" style="margin-left: 30px">
+            <!--<div class="row">
+                <hr>
+                <div class="col-md-1">
+                    <a href="#">
+                        <img style="width: 100%" src="//cdn.shopifycdn.net/s/files/1/0039/3312/products/PATAGONIA_BivyDownJacket-newnavy_3_720x.jpg?v=1623196326">
+                    </a>
+                </div>
+                <div class="col-md-3">
+                    <a href="#" >
+                    <span style="font-size: 13px;color: #282828">Bivy Down Jacket - new navy</span>
+                    </a>
+                    <span style="font-size: 20px;color: #888888">$370.00</span>
+                    <br>
+                    <span style="font-size: 13px;color: #282828">  Quantity:<span class="goods-quantity">1</span></span>
+                    <br>
+                    <span style="font-size: 13px;color: #282828">SIZE:ONE SIZE</span>
+                    <br>
+                    <a href="#" class="remove" style="font-size: 13px;color:#a8a8a8;">Remove</a>
+                </div>
+            </div>-->
+        </div>
+        <!--商品信息结束-->
+
+        <hr>
+        <!--总价开始-->
+        <div class="row">
+            <div class="col-md-3" style="font-size: 20px;color: black;font-weight: inherit">
+                Total
+            </div>
+            <div class="col-md-2" style="font-size: 20px;color: #888888">
+                <span id="fuhao1"></span>
+                <span id="total-Price1"></span>
+            </div>
+        </div>
+        <!--总价结束-->
+        <br>
+        <div class="row">
+            <div class="col-md-2" >
+                <a href="/" type="button"  style="font-size: 15px;color: #999999">
+                    Continue Shopping
+                </a>
+            </div>
+            <div class="col-md-2 ">
+                <a href="/cartPage/myCart" class="btn btn-primary checkOut-btn" id="checkout-btn-white">
+                    CheckOut
+                </a>
+            </div>
+        </div>
+        <br><br>
+
+    </div>
+
+
+</div>
+
+<!-- 顶部滚动开始 -->
+<div class="top-gun" style="background-color: #ff4422;height: max-content;">
+    <marquee direction="left" behavior="scroll" scrollamount="20px" >
+        <p style="font-size: 45px">Happy Holidays! ~ Gift Guide</p>
+    </marquee>
+</div>
+<!-- 菜单栏开始-->
+<nav class="navbar navbar-default" >
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+
+            <div  class="brand" style="margin-left: 30px">
+                <a class="navbar-brand" href="#" style="font-size: 25px; color: black;font-weight: bolder">
+                   The Greatest Mall
+                </a>
+            </div>
+
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <div class="brand2">
+                <ul class="nav navbar-nav">
+                    <li><a href="/sign-in" id="user-Name" style="color: #333333;font-size: 13px">Login</a></li>
+                    <li><a href="/" style="color: #333333;font-size: 13px">Shopping Online</a></li>
+                    <li><a href="/" id="cart" style="color: #333333;font-size: 13px">Sale</a></li>
+                </ul>
+            </div>
+
+
+                <div class="searchForm ">
+
+
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <form class="navbar-form navbar-left" >
+                                <div class="form-group">
+                                    <input style="font-size: 12px;height: 28px;border-radius: 0px" type="text" name="search-info" id="search-info" class="form-control" placeholder="Search">
+                                </div>
+                                <input type="button" style="font-size: 12px;height: 28px;border-radius: 0px" id="search-btn" class="btn btn-default" value="Search"/>
+                            </form>
+                        </li>
+                        <li><a href="/wishlistPage/mainPage" style="color: #333333;font-size: 13px">WishList(<span id="wishListNumbers"></span>)</a></li>
+                        <li><a class="btn-test" style="color: #333333;font-size: 13px">Cart(<span id="cartNumbers"></span>)</a></li>
+
+                        <li class="dropdown">
+                            <a style="color: #333333;font-size: 13px" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="/cartPage/myCart" style="color: #333333;font-size: 13px">My Cart</a></li>
+                                <li><a href="/ordersPage/mainPage" style="color: #333333;font-size: 13px">My Orders</a></li>
+                                <li><a href="/personal" style="color: #333333;font-size: 13px">Personal Infomation</a></li>
+                                <li role="separator" class="divider"></li>
+                                <li><a href="/declarePage/loginPage" style="color: #333333;font-size: 13px">Admin Portal</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+
+            </div>
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+</nav>
+<!-- 菜单栏结束-->
+
+
+
+
+
+<div class="container-fluid" style="height: 50px;width:100%;background-color: #e6e6e6">
+
+
+    <div class="col-md-2" style="position: center;margin-top: 16px;margin-left: 20px;position: relative"></div>
+    <a href="/homePage/mankind" class="col-md-2" style="position: relative;margin-top: 16px;margin-left: 10px;color: #7F7F7F;font-size: 13px;">All Mens Sale</a>
+    <a href="/homePage/womanKind"  class="col-md-2" style="position: relative;margin-top: 16px;margin-left: 20px;color: #7F7F7F;font-size: 13px; ">All Womens Sale</a>
+    <a href="/homePage/otherKind"  class="col-md-2" style="position: relative;margin-top: 16px;margin-left: 30px;color: #7F7F7F;font-size: 13px;">Common Sale</a>
+    <a href="/homePage/underKind"  class="col-md-2" style="position: relative;margin-top: 16px;margin-left: 40px;color: #7F7F7F;font-size: 13px;">Under $100</a>
+</div>
+
+
+
+<br/>
+

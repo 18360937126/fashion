@@ -1,0 +1,38 @@
+.biaoti{
+    font-size: 40px;
+    font-weight: bolder;
+}
+.wapper{
+
+}
+.wapper-left-left{
+    background-color: white;
+
+}
+.wapper-left{
+    background-color: white;
+    /*border-right: 1px solid #888888;*/
+}
+.wapper-right{
+    background-color: whitesmoke;
+    border-left: 1px solid #888888;
+}
+.checkOut-btn{
+    background-color: #0c1f28;
+    color: whitesmoke;
+    font-size: 15px;
+
+}
+
+.wenzi-policy{
+    color: #957937;
+    font-size: 12px;
+}
+.img-wapper{
+    background-color: white;
+    border-radius: 10px;
+}
+.img-wapper img{
+    width: 100%;
+    height: 100%;
+}

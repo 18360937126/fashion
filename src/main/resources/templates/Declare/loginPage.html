@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta name="viewport" content="initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+<meta charset="UTF-8">
+<title>登录</title>
+	<link rel="stylesheet" type="text/css" href="Bootstrap/bootstrap-3.3.7-dist/css/bootstrap.min.css" />
+	<link href="css/style.css" rel="stylesheet">
+	<script src="js/jquery-3.4.1.min.js" type="text/javascript" charset="utf-8"></script>
+<style>
+	body{font-size: 14px; height: auto;}
+.loginbg{ background: #1890ff; position: absolute; width: 100%; height: 300px;  left: 0; top: 0; z-index: 0;}
+.loginav{width: 870px; padding: 0 50px; margin: 0 auto;  background: #fff; z-index: 10; position: relative; margin-top:195px; padding-bottom: 50px;margin-bottom: 50px; box-shadow: 0 0 30px rgba(0,0,0,.1)}
+
+.logo2{left: 0px;font-size: 30px; color: #fff; position: absolute; width: 100%; top: -45px; text-align: center;padding-bottom: 26px;}
+.logotit{ text-align: center; padding: 40px 0; font-size: 30px;}
+.loginav2{width: 600px;padding: 0 65px; }
+
+.btnblock{border-radius: 0!important;}
+.loginbox{padding: 50px 0 70px 0;}
+.logininput .forminput{ border: none;  display: block; width: 100%; line-height: 48px; outline: none; text-indent: 1px;}
+.logininput>li{ display: block; padding-top:5px; position: relative;border-bottom: 1px solid #efefef;}
+	.logininput li>span{color: #ccc;}
+.logintit{ border-bottom: 2px solid #efefef; color: #1263f0; position: relative; padding: 15px 0; font-size: 16px; text-indent: 20px;}
+.logintit:before{ position: absolute; content: ""; height: 4px; background: #1263f0; width: 100px; left: 0; bottom: -2px;}
+	.btn-primary{background: #1890ff; border-color: #1890ff;}
+	</style>
+</head>
+<body>
+	<div class="loginav  loginav2">
+	<div class="logo2">时尚商城后台管理</div>
+	<div>
+		<ul class=" loginbox">
+			<div class="logintit">用户登录</div>
+			<ul class="logininput">
+				<form action="" method="post" id="loginForm">
+					<input name="username" class="forminput" type="text" placeholder="请输入账号">
+					<input name="password"  class="forminput" type="text" placeholder="请输入密码">
+					<input type="button" id="loginbtn" class="btn btnblock btn-block btn-primary" value="登录"></input>
+				</form>
+				<li><span id="errorMsg"></span></li>
+			</ul>
+		</ul>
+	</div>
+
+	</div>
+<div class="loginbg"></div>
+</body>
+<script>
+	/*判断是否登录*/
+	$(function () {
+		$("#loginbtn").click(function () {
+			$.post("/admin/login",$("#loginForm").serialize(),function (data) {
+				if(data.flag){
+					//注册成功，跳转成功页面
+					location.href = "/declarePage/index";
+				}else{
+					$("#errorMsg").html(data.errorMsg);
+				}
+			});
+
+		})
+	})
+</script>
+</html>

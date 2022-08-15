@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>place an order</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edg" />
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <!--<link rel="stylesheet" type="text/css" href="css/home.css" />-->
+    <script src="js/jquery-3.4.1.min.js" type="text/javascript" charset="utf-8"></script>
+    <link rel="stylesheet" type="text/css" href="Bootstrap/bootstrap-3.3.7-dist/css/bootstrap.min.css" />
+    <script src="Bootstrap/bootstrap-3.3.7-dist/js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+    <link rel="stylesheet" type="text/css" href="css/place-an-order.css" />
+
+
+    <link rel="stylesheet" type="text/css" href="css/sweetalert.css">
+    <script type="text/javascript" src="js/sweetalert-dev.js"></script>
+
+    <script>
+        $(function () {
+            $.get("/findUserName",{},function (user) {
+                if(user){
+                    //判断依据登录，再来编辑购物车页面
+                    $.get("/cart/findMyCartsByUid",{},function (data) {
+                        var li='';
+                        var lis='';
+                        var allprice = 0.00;
+                        for (var i = 0; i < data.length; i++) {
+                            var good = data[i];
+                            var price = good.gprice;
+                            allprice = numSub(allprice,price)
+                            li=' <div class="row">\n' +
+                                '         <br>           <div class="col-md-1"></div>\n' +
+                                '                    <div class="col-md-1 img-wapper">\n' +
+                                '                        <img src="'+good.gimg1+'">\n' +
+                                '                    </div>\n' +
+                                '                    <div class="col-md-6">\n' +
+                                '                        <span style="font-size: 14px;color: #323232">'+good.gname2+'</span>\n' +
+                                '                        <p style="font-size: 12px;color: #717171">'+good.gsize1+'</p>\n' +
+                                '                    </div>\n' +
+                                '                    <div class="col-md-4">\n' +
+                                '                        <p style="font-size: 14px;color: #323232">$'+good.gprice+'</p>\n' +
+                                '                    </div>\n' +
+                                '                </div>';
+                            lis+=li;
+                        }
+                        $(".meiyuanfuhao").html('$');
+                        $("#goods-wapper").html(lis);
+                        $(".zongjia").html('$'+allprice);
+                        var tax = accMul(allprice,0.2);
+                        $("#pricetax").html(tax);
+                    });
+                }else{
+                    location.href="/";
+                }
+            });
+        });
+        function numSub(num1, num2) {
+            var baseNum, baseNum1, baseNum2;
+            try {
+                baseNum1 = num1.toString().split(".")[1].length;
+            } catch (e) {
+                baseNum1 = 0;
+            }
+            try {
+                baseNum2 = num2.toString().split(".")[1].length;
+            } catch (e) {
+                baseNum2 = 0;
+            }
+            baseNum = Math.pow(10, Math.max(baseNum1, baseNum2));
+            return (num1 * baseNum + num2 * baseNum) / baseNum;
+        };
+
+        function accMul(arg1, arg2) {
+            var m = 0,
+                s1 = arg1.toString(),
+                s2 = arg2.toString();
+            try {
+                m += s1.split(".")[1].length
+            } catch (e) {}
+            try {
+                m += s2.split(".")[1].length
+            } catch (e) {}
+            return Number(s1.replace(".", "")) * Number(s2.replace(".", "")) / Math.pow(10, m)
+        }
+    </script>
+
+</head>
+<body>
+
+<div class="container-fluid wapper">
+    <div class="row">
+        <div class="col-md-2 wapper-left-left"></div>
+        <!--左边部分开始-->
+        <div class="col-md-5 wapper-left">
+            <br>
+            <div class="row">
+                <p class="biaoti">The Greatest Mall</p>
+                <br>
+                <a href="/cartPage/myCart" >
+                    <span class="arrow-back-link__arrow">←</span>
+                    <span style="font-size: 13px;color: #000000">Back to Your Cart</span>
+                </a>
+                <br>
+            </div>
+            <div class="row">
+
+                <form id="addressInfomation">
+                    <div class="form-row">
+                        <div class="form-group col-md-10">
+                            <h3>Contact information</h3>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col-md-10">
+                            <input type="email" class="form-control" name="email" id="inputEmail4" placeholder="Email">
+                            <input class="form-check-input" type="checkbox" checked id="gridCheck">
+                            <span class="form-check-label" for="gridCheck">Email me with news and offers</span>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col-md-10">
+                           <h3>Shipping address</h3>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col-md-5">
+                            <input type="text" class="form-control" name="city" placeholder="City">
+                        </div>
+                        <div class="form-group col-md-5">
+                            <input type="text" class="form-control" name="postal" placeholder="Postal Code">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col-md-10">
+                            <input type="text" class="form-control" name="username" placeholder="Name">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col-md-10">
+                            <input type="text" class="form-control" name="address" placeholder="Address">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col-md-10">
+                            <input type="text" class="form-control" name="phone" placeholder="Phone">
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+
+            <div class="row">
+                <div class="col-md-3">
+                    <a href="/" class="btn btn-primary checkOut-btn">Continue Shopping</a>
+                </div>
+                <div class="col-md-3"></div>
+                <div class="col-md-3">
+                    <a href="/ordersPage/mainPage" class="btn btn-block">Return to Your Orders</a>
+                </div>
+            </div>
+            <br><br><br><br><br><br>
+            <div class="row" >
+                <hr>
+                <div class="col-md-3"><a class="wenzi-policy" href="#">Refund policy</a></div>
+                <div class="col-md-3"><a class="wenzi-policy" href="#">Shipping policy</a></div>
+                <div class="col-md-3"><a class="wenzi-policy" href="#">Privacy policy</a></div>
+                <div class="col-md-3"><a class="wenzi-policy" href="#">Terms of service</a></div>
+            </div>
+        </div>
+        <!--左边部分结束-->
+
+        <!--右边部分开始-->
+        <div class="col-md-5 wapper-right">
+            <br><br>
+
+            <div id="goods-wapper">
+                <div class="row">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-2 img-wapper">
+                        <img src="//cdn.shopifycdn.net/s/files/1/0039/3312/products/P1080694_720x.jpg?v=1631589987">
+                    </div>
+                    <div class="col-md-5">
+                        <span style="font-size: 14px;color: #323232">Venus Skirt - grass green</span>
+                        <p style="font-size: 12px;color: #717171">ONE SIZE</p>
+                    </div>
+                    <div class="col-md-1"></div>
+                    <div class="col-md-3">
+                        <p style="font-size: 14px;color: #323232">$395</p>
+                    </div>
+                </div>
+            </div>
+
+            <br><br>
+
+            <!--总价开始-->
+            <div class="row">
+                <hr>
+                <div class="col-md-1"></div>
+                <div class="col-md-1"><span style="font-size: 14px;color: #535353">Subtotal</span></div>
+                <div class="col-md-6"></div>
+                <div class="col-md-4">
+                    <span style="font-weight: bolder" class="zongjia"></span>
+                </div>
+            </div>
+
+            <div class="row">
+                <hr>
+                <div class="col-md-1"></div>
+                <div class="col-md-5"><span style="font-size: 14px;color: #323232;font-weight: bold">Total</span>
+                    <p style="color: #717171">Including $<span id="pricetax">0</span> in taxes</p>
+                </div>
+                <div class="col-md-2"></div>
+                <div class="col-md-4">
+                    <span style="font-weight: bolder;font-size: 30px" class="zongjia">
+                    </span>
+                </div>
+            </div>
+            <!--总价结束-->
+
+            <!--结账按钮-->
+            <div class="row">
+                <hr>
+                <div class="col-md-8"></div>
+                <div class="col-md-4">
+                    <button class="btn btn-block" style="color:white;background-color: black;width: 80%" data-toggle="modal" data-target="#exampleModal">Apply</button>
+                    <br><br>
+                </div>
+            </div>
+            <!--结账按钮-->
+
+        </div>
+        <!--右边部分结束-->
+    </div>
+
+
+
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Apply</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <button type="button" class="btn btn-outline-primary" onclick="checkout()">PayPal</button>
+                <button type="button" class="btn btn-outline-success" onclick="checkout()">WeChat Pay</button>
+                <button type="button" class="btn btn-outline-dark" onclick="checkout()">My Pocket</button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function checkout() {
+        //手机号的正则表达式验证手机格式
+        var re = new RegExp("^1[3|4|5|7|8][0-9]{9}$");
+        var em = new RegExp("^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)+$");
+        //邮箱的正则表达式验证邮箱格式
+
+        var email = $("input[name='email']").val();
+        var city = $("input[name='city']").val();
+        var postal = $("input[name='postal']").val();
+        var username = $("input[name='username']").val();
+        var address = $("input[name='address']").val();
+        var phone = $("input[name='phone']").val();
+
+        if(email==""){
+            swal("Sorry","Please fill in your email.","error");
+        }else{
+            if(city==""||postal==""||username==""||address==""||phone==""){
+                swal("Sorry","Please fill in your shopping address infomation.","error");
+            }else{
+                //验证正则表达式
+                var b = re.test(phone);
+                if(b==false){
+                    swal("Sorry","Please fill in the correct mobile phone format.","error");
+                }else{
+                    var b1 = em.test(email);
+                    if(b1==false){
+                        swal("Sorry","Please fill in the correct email format.","error");
+                    }else{
+                        //发送给后台添加订单
+                        $.post("/orders/pleaseAnOrder",$("#addressInfomation").serialize(),function () {
+                            swal("Congratulations","Order Succeeded.","success");
+                            location.href="/";
+                        });
+                    }
+                }
+
+
+
+            }
+        }
+    }
+</script>
+
+
+</body>
+</html>

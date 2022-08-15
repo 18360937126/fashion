@@ -1,0 +1,106 @@
+/* 导航栏 */
+.book_nav{
+	min-height: 30px;
+	margin-bottom: 0;
+	background-image: url(../img/bai/head.jpg);
+	background-position: center center;
+	background-size: cover;
+}
+.navbar-brand{
+		line-height: 50px;
+	}
+.navbar-toggle{
+		margin-top: 23px;
+		opacity: 0.8;
+	}
+
+.navbar-nav li a{
+				line-height: 30px;
+				font-size: 18px;
+				font-family: 幼圆;
+				font-weight: bold;
+		}
+
+/* 商品块 */
+.oneblog {
+	background-color: rgba(255,255,255,0.75);
+	position: relative;
+	width: 100%;
+	height: 200px;
+	border: 1px solid black;
+	/* left: 5%; */
+}
+
+.ifchecked {
+	position: relative;
+	top: 30px;
+	left: 3%;
+}
+
+.blog-img {
+	position: relative;
+	width: 100px;
+	height: 150px;
+	top: 25px;
+	left: 100px;
+}
+
+.span-bookname {
+	position: relative;
+	left: 230px;
+	top: -80px;
+}
+
+.span-price {
+	position: relative;
+	left: 900px;
+	top: -110px;
+}
+
+.span-a {
+	position: relative;
+	left: 950px;
+	top: -110px;
+}
+
+@media screen and (max-width: 992px){
+	.span-price{
+		left: 500px;
+	}
+	.span-a{
+		left: 550px;
+	}
+
+	
+}
+
+/* 底部 */
+.container-bottom {
+	position: fixed;
+	bottom: 0;
+	width: 100%;
+	height: 50px;
+	background-color: rgb(245, 189, 163);
+}
+
+.bottom {
+	position: fixed;
+	bottom: 0;
+	width: 100%;
+	height: 50px;
+	/* border: 1px solid black; */
+	background-color: rgb(245, 189, 163);
+}
+
+.total {
+	position: relative;
+	left: 1000px;
+	line-height: 50px;
+	color: white;
+	font-size: 20px;
+}
+@media screen and (max-width: 992px){
+	.total{
+		left: 600px;
+	}
+}

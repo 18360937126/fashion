@@ -1,0 +1,31 @@
+.checkBox{
+    /*border: solid;*/
+}
+.checkBox2{
+    position: center;
+    margin-left: 20%;
+
+}
+.checkBox3{
+    margin-top: 70px;
+}
+.goods-info{
+    font-size: 15px;
+}
+.goods-name{
+    font-size: 10px;
+    color: grey;
+}
+.checkBox4{
+    /*border: solid;*/
+    margin-top: 70px;
+
+}
+
+.pay-btn-div{
+    margin-left: 40%;
+}
+.pay-btn{
+    width: 150px;
+
+}
